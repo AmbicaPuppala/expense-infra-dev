@@ -39,7 +39,7 @@ module "bastion_sg" {
   common_tags = var.common_tags
 }
 
-module "app_alb_sg
+module "app_alb_sg"{
   source = "git::https://github.com/AmbicaPuppala/terraform-aws-securitygroup.git?ref=main"
   project = var.project
   environment = var.environment
