@@ -7,7 +7,7 @@ terraform {
   }
 
 backend "s3" {
-    bucket = "terraform-remotestate-file-dev" 
+    bucket = "terraform-remotestate-file" 
     key    = "expense-infra-dev-vpc" 
     region = "us-east-1"
     dynamodb_table = "state-locking"
