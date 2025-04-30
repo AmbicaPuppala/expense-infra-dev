@@ -57,3 +57,13 @@ resource "aws_security_group_rule" "app_alb_bastion" {
     source_security_group_id = module.bastion_sg.sg_id
     security_group_id = module.app_alb_sg.sg_id
 }
+
+resource "aws_security_group_rule" "bastion_public" {
+  type              = "ingress"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks       = ["49.37.152.212/32"]
+    security_group_id = module.bastion_sg.sg_id
+    
+}
