@@ -14,3 +14,11 @@ variable "common_tags" {
     Terraform   = "true"
   }
 }
+
+variable "zone_id" {
+  default = "Z0903495IBCX9H53880M"
+}
+
+variable "domain_name" {
+  default = "salearnings.tech"
+}
