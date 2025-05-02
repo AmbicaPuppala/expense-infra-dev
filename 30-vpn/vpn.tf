@@ -9,6 +9,8 @@ resource "aws_instance" "vpn" {
     vpc_security_group_ids = [data.aws_ssm_parameter.vpn_sg_id.value]
     instance_type         = "t3.micro"
     subnet_id = local.public_subnet_id
+    user_data = file("user_data.sh")
+
 
     tags = merge(
       var.common_tags,
@@ -16,4 +18,8 @@ resource "aws_instance" "vpn" {
         Name = "${var.project}-${var.environment}-vpn"        
     }    
     )
+}
+
+output "vpn_id" {
+  value       = aws_instance.vpn.public_ip  
 }
