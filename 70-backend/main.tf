@@ -24,14 +24,14 @@ resource "null_resource" "expense" {
   }
   provisioner "file" {
     source      = "backend.sh"
-    destination = "/tmp/backend.sh"
+    destination = "/tmp/backend.sh "
   }
 
 
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/backend.sh",
-      "sudo sh /tmp/backend.sh"
+      "sudo sh /tmp/backend.sh ${var.environment}"
     ]
   }
 }
