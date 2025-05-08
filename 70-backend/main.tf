@@ -24,11 +24,11 @@ resource "null_resource" "expense" {
   }
   provisioner "file" {
     source      = "backend.sh"
-    destination = "/tmp/backend.sh "
+    destination = "/tmp/backend.sh"
   }
 
-
   provisioner "remote-exec" {
+    # Bootstrap script called with private_ip of each node in the cluster
     inline = [
       "chmod +x /tmp/backend.sh",
       "sudo sh /tmp/backend.sh ${var.environment}"
