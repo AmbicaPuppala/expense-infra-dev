@@ -14,3 +14,8 @@ variable "common_tags" {
     Terraform   = "true"
   }
 }
+
+
+variable "domain_name" {
+  default = "salearnings.tech"
+}
