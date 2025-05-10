@@ -60,6 +60,16 @@ module "app_alb_sg"{
   common_tags = var.common_tags
 }
 
+module "web_alb_sg"{
+  source = "git::https://github.com/AmbicaPuppala/terraform-aws-securitygroup.git?ref=main"
+  project = var.project
+  environment = var.environment
+  sg_name = "web-alb"
+  sg_description = "created for web-alb in expense dev infra"
+  vpc_id = data.aws_ssm_parameter.vpc_id.value
+  common_tags = var.common_tags
+}
+
 resource "aws_security_group_rule" "app_alb_bastion" {
   type              = "ingress"
     from_port        = 80
@@ -186,3 +196,11 @@ resource "aws_security_group_rule" "backend_app-alb" {
     security_group_id = module.backend_sg.sg_id
 }
 
+resource "aws_security_group_rule" "web_alb_443" {
+  type              = "ingress"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks       = ["0.0.0.0/0"] #it should be static ip of the user who is going to connect to the VPN
+    security_group_id = module.web_alb_sg.sg_id 
+}
