@@ -101,7 +101,7 @@ resource "aws_autoscaling_group" "backend" {
   name                      = "${local.resource_name}-asg"
   max_size                  = 10
   min_size                  = 1
-  health_check_grace_period = 60
+  health_check_grace_period = 300
   health_check_type         = "ELB"
   desired_capacity          = 1
   target_group_arns = [aws_lb_target_group.backend.arn]
