@@ -204,3 +204,31 @@ resource "aws_security_group_rule" "web_alb_443" {
     cidr_blocks       = ["0.0.0.0/0"] #it should be static ip of the user who is going to connect to the VPN
     security_group_id = module.web_alb_sg.sg_id 
 }
+
+resource "aws_security_group_rule" "app_alb_frontend" {
+  type              = "ingress"
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    source_security_group_id = module.frontend_sg.sg_id
+    security_group_id = module.app_alb_sg.sg_id
+}
+
+resource "aws_security_group_rule" "frontend_web_alb" {
+  type              = "ingress"
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    source_security_group_id = module.web_alb_sg.sg_id
+    security_group_id = module.frontend_sg.sg_id
+}
+
+# usually you should configure frontend using private ip from VPN only
+resource "aws_security_group_rule" "frontend_public" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.frontend_sg.sg_id
+}

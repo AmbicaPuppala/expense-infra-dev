@@ -14,8 +14,9 @@ resource "aws_instance" "backend" {
 
 resource "null_resource" "backend" {
 
-  # Bootstrap script can run on any instance of the cluster
-  # So we just choose the first in this case
+  triggers = {
+    instance_id = aws_instance.backend.id
+  }
   connection {
     host        = aws_instance.backend.private_ip
     type        = "ssh"
@@ -67,15 +68,16 @@ resource "aws_lb_target_group" "backend" {
   vpc_id   = local.vpc_id
 
   health_check {
-    healthy_threshold   = 2
+    healthy_threshold = 2
     unhealthy_threshold = 2
-    timeout             = 5
-    protocol           = "HTTP"
-    port             = 8080
-    path             = "/heath"
-    matcher          = "200-299"
-    interval         = 10
+    timeout = 5
+    protocol = "HTTP"
+    port = 8080
+    path = "/health"
+    matcher = "200-299"
+    interval = 10
   }
+
 }
 
 resource "aws_launch_template" "backend" {
@@ -142,6 +144,18 @@ resource "aws_autoscaling_group" "backend" {
   }
 }
 
+resource "aws_autoscaling_policy" "backend" {
+  name                   = "${local.resource_name}-backend"
+  policy_type            = "TargetTrackingScaling"
+  autoscaling_group_name = aws_autoscaling_group.backend.name
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 70.0
+  }
+}
 
 resource "aws_lb_listener_rule" "backend" {
   listener_arn = data.aws_ssm_parameter.app_alb_listener_arn.value
