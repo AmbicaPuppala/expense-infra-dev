@@ -37,7 +37,7 @@ resource "null_resource" "frontend" {
   }
 }
 
-resource "aws_ec2_instance_state" "frontend" {
+resource "aws_ec2_instance_state" "frontend"{
   instance_id = aws_instance.frontend.id
   state       = "stopped"
   depends_on = [null_resource.frontend]
